@@ -1,0 +1,128 @@
+<nz-layout class="layout">
+
+  <nz-sider class="side-menu" nzWidth="200px">
+    <img class="logo" ngSrc="assets/logo.png" width="50" height="50">
+
+    <ul class="menu" nz-menu nzTheme="dark" nzMode="inline">
+
+      <li nz-menu-item routerLink="">
+        <span nz-icon nzType="thunderbolt"></span>
+        <span>Single Meter</span>
+      </li>
+
+      <li nz-menu-item>
+        <span nz-icon nzType="file-text"></span>
+        <span>Batch Processor</span>
+      </li>
+
+      <li class="logout" nz-menu-item (click)="logout()">
+        <span nz-icon nzType="logout"></span>
+        <span>Logout</span>
+      </li>
+
+    </ul>
+  </nz-sider>
+
+
+  <nz-layout>
+    <h1 class="heading">Multiple Token Generator</h1>
+    <nz-content class="content">
+
+
+      <div class="meter-detail">
+        <h2 class="meter-detail-heading">Meter Detail</h2>
+
+        <div class="content-body">
+
+          <form class="form" nz-form [formGroup]="validateForm" nzLayout="vertical" (ngSubmit)="submitForm()">
+
+            <nz-form-item class="form-item">
+
+              <nz-transfer
+                [nzDataSource]="list"
+                [nzDisabled]="disabled"
+                [nzShowSearch]="showSearch"
+                [nzShowSelectAll]="false"
+                [nzRenderList]="[renderList, renderList]"
+                (nzSelectChange)="select($event)"
+                (nzChange)="change($event)"
+              >
+                <ng-template
+                  #renderList
+                  let-items
+                  let-stat="stat"
+                  let-disabled="disabled"
+                  let-onItemSelectAll="onItemSelectAll"
+                  let-onItemSelect="onItemSelect"
+                >
+                  <nz-table #t [nzData]=items nzSize="small">
+                    <thead>
+                    <tr>
+                      <th
+                        [nzDisabled]="disabled"
+                        [nzChecked]="stat.checkAll"
+                        [nzIndeterminate]="stat.checkHalf"
+                        (nzCheckedChange)="onItemSelectAll($event)"
+                      ></th>
+                      <th>Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="table-data" *ngFor="let data of t.data" (click)="onItemSelect(data)">
+                      <td
+                        [nzChecked]="!!data.checked"
+                        [nzDisabled]="disabled || data.disabled"
+                        (nzCheckedChange)="onItemSelect(data)"
+                      ></td>
+                      <td>{{ data.title }}</td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </ng-template>
+              </nz-transfer>
+            </nz-form-item>
+
+
+            <nz-form-item class="form-item">
+              <nz-form-label [nzSpan]="12" nzOffset="6" nzRequired nzFor="tokens">Number of Tokens</nz-form-label>
+              <nz-form-control [nzSpan]="12" nzOffset="6" nzErrorTip="Please enter a valid number of tokens">
+                <input type="text" nz-input formControlName="tokens" placeholder="Enter number of tokens"/>
+              </nz-form-control>
+            </nz-form-item>
+
+
+            <nz-form-item class="form-item">
+              <nz-form-label [nzSpan]="12" nzOffset="6" nzRequired nzFor="amount">Unit/kW Amount</nz-form-label>
+              <nz-form-control [nzSpan]="12" nzOffset="6" nzErrorTip="Please enter a valid amount of Units or kW ">
+                <input type="text" nz-input formControlName="amount" placeholder="Enter Unit/kW amount"/>
+              </nz-form-control>
+            </nz-form-item>
+
+
+            <nz-form-item>
+              <nz-form-control [nzSpan]="12" nzOffset="6">
+                <button nz-button nzType="primary" nzBlock>Generate</button>
+              </nz-form-control>
+            </nz-form-item>
+
+          </form>
+
+        </div>
+      </div>
+
+
+      <div class="meter-detail" *ngIf="display">
+        <h2 class="meter-detail-heading">Token Detail</h2>
+
+        <div class="token-detail">
+
+          <nz-form-item class="export-button">
+            <nz-form-control [nzSpan]="12" nzOffset="6">
+              <button nz-button nzType="primary" nzBlock>Export Text File</button>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
